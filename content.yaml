@@ -1,0 +1,28 @@
+---
+- name: multi task  
+  hosts: dev
+  tasks:
+    - name: installing httpd package
+      yum: 
+        name: httpd
+        state: present
+
+    - name: creating /web directory
+      file: 
+        path: /web
+        group: ansi_user
+        mode: '2775'
+        state: directory
+        setype: httpd_sys_content_t
+
+    - name: create the index.html file
+      lineinfile:
+        path: /web/index.html
+        line: Learning Ansible
+        create: yes
+
+    - name: create link  
+      file:
+        src: /web
+        dest: /var/www/html/web
+        state: link
