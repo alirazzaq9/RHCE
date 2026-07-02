@@ -1,0 +1,10 @@
+---
+- name: Cron Play
+  hosts: dev
+  tasks: 
+    - name: create Job
+      cron:
+        name: yum autoupdate
+        minute: "*/2"
+        user: ansi_user
+        job: logger "practicing ansible" 
