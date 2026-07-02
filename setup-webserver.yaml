@@ -1,0 +1,33 @@
+---
+- name: Setup a webserver
+  hosts: test
+  tasks: 
+
+    - name: install httpd and firewalld
+      yum: 
+        name: 
+          - firewalld
+          - httpd
+        state: present
+
+    - name: start service
+      service: 
+        name: "{{ item }}"  
+        state: started
+        enabled: true
+      loop: 
+        - httpd
+        - firewalld
+
+    - name: write a line in index.html
+      copy:
+        content: 'Hello learners'
+        dest: /var/www/html/index.html
+
+    - name: open httpd on firewalld
+      firewalld:
+        service: https
+        state: enabled
+        permanent: true
+        immediate: true
+        offline: true
