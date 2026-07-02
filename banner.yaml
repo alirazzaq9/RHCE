@@ -1,0 +1,9 @@
+---
+- name: Add following line in /etc/issue file
+  hosts: all
+  tasks: 
+
+    - name: Add following line in /etc/issue file
+      lineinfile:
+        path: /etc/issue
+        line: only authorized users are allowed to access the system
