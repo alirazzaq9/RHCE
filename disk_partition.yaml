@@ -1,0 +1,48 @@
+---
+- name: disk
+  hosts: dev
+  tasks:
+
+    - name: create partition and format disk
+      block:
+        - name: check disk availability
+          debug:
+            msg: "{{ansible_facts.devices.sdb.size | default ('sdb disk does not available')}}"
+
+        - name: create first partition of 1500MiB
+          parted:
+            device: /dev/sdb
+            number: 1
+            state: present
+            part_end: 1500MiB
+
+      rescue:
+        - name: print a message
+          debug:
+            msg: could not create partition of 1500MiB
+
+        - name: create first partition of 800MiB
+          parted:
+            device: /dev/sdb
+            number: 1
+            state: present
+            part_end: 800MiB
+
+      always: 
+        - name: format the filesystem
+          filesystem:
+            fstype: ext4
+            dev: /dev/sdb1
+
+        - name: create directory
+          file:
+            path: /data
+            state: directory
+
+        - name: mount the filesystem
+          mount:
+            path: /data
+            src: /dev/sdb1
+            fstype: ext4
+            state: mounted
+
