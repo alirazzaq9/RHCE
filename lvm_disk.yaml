@@ -1,0 +1,53 @@
+--
+- name: Creating partition
+  hosts: dev
+  tasks:
+
+    - name: Create Partition and format disk
+      block:
+        - name: Check If The VG Exist
+          shell: vgdisplay research
+          register: vg_info
+          ignore_errors: yes
+          changed_when: false
+
+        - name: Print
+          debug:
+            msg: "vg not found"
+          when: "vg_info.rc != 0"
+
+        - name: create a LV of 1500MiB
+          community.general.lvol:
+            vg: research
+            lv: data
+            size: 1500m
+
+      rescue:
+        - name: Print a msg
+          debug:
+            msg: "Insufficient size of vg"
+
+        - name: create a LV of 700MiB
+          community.general.lvol:
+            vg: research
+            lv: data
+            size: 700m
+
+      always:
+        - name: Format the FS
+          community.general.filesystem:
+            fstype: ext3
+            dev: /dev/research/data
+
+        - name: Creating Mount Point
+          ansible.builtin.file:
+            path: /data
+            state: directory
+            mode: '0755'
+
+        - name: Mounting the FS
+          ansible.posix.mount:
+            path: /data
+            src: /dev/research/data
+            fstype: ext3
+            state: mounted
