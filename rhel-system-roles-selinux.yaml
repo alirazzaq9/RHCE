@@ -1,0 +1,12 @@
+---
+- name: setup webserver
+  hosts: test
+  roles:
+    - apache
+[student@Controller ansible]$ cat selinux.yaml 
+- name: Manage timesync with 3 servers
+  hosts: all
+  vars:
+    - selinux_state: permissive
+  roles:
+    - rhel-system-roles.selinux
