@@ -1,0 +1,6 @@
+---
+- src: http://ec2-100-48-11-172.compute-1.amazonaws.com/balancer.tar.gz
+  name: balancer
+
+- src: http://ec2-100-48-11-172.compute-1.amazonaws.com/phpinfo.tar.gz
+  name: phpinfo
