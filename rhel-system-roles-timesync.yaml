@@ -1,0 +1,9 @@
+cat timesync.yaml 
+- name: Manage timesync with 3 servers
+  hosts: all
+  vars:
+    timesync_ntp_servers:
+      - hostname: 192.168.56.11
+        iburst: true
+  roles:
+    - rhel-system-roles.timesync
