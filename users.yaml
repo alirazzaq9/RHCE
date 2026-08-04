@@ -1,0 +1,43 @@
+---
+- name: Create playbook to create the users
+  hosts: dev,test
+  vars_files:
+    - user_list.yaml
+    - vault.yml
+  tasks: 
+    - name: creste group opsdev
+      group:
+        name: opsdev
+        state: present
+
+    - name: create user
+      when: "item.job == 'developer'"
+      user:
+        name: "{{item.name}}"
+        groups: opsdev
+        uid: "{{item.uid}}"
+        password_expire_max: "{{item.password_expire_days}}" 
+        password: "{{developer_pw | password_hash('sha512')}}"
+      loop: "{{users}}"
+
+
+- name: Create playbook to create the users
+  hosts: test
+  vars_files:
+    - user_list.yaml
+    - vault.yml
+  tasks:
+    - name: creste group opsmgr
+      group:
+        name: opsmgr
+        state: present
+
+    - name: create user
+      when: "item.job == 'manager'"
+      user:
+        name: "{{item.name}}"
+        groups: opsmgr
+        uid: "{{item.uid}}"
+        password_expire_max: "{{item.password_expire_days}}"
+        password: "{{manager_pw | password_hash('sha512')}}"
+      loop: "{{users}}" 
