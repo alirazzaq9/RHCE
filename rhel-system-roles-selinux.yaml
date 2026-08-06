@@ -1,10 +1,5 @@
 ---
-- name: setup webserver
-  hosts: test
-  roles:
-    - apache
-[student@Controller ansible]$ cat selinux.yaml 
-- name: Manage timesync with 3 servers
+- name: Managing SElinux mode
   hosts: all
   vars:
     - selinux_state: permissive
