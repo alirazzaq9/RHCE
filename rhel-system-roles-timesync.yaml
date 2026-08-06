@@ -1,4 +1,4 @@
-cat timesync.yaml 
+---
 - name: Manage timesync with 3 servers
   hosts: all
   vars:
